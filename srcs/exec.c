@@ -6,7 +6,7 @@
 /*   By: ltheveni <ltheveni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 11:12:45 by ltheveni          #+#    #+#             */
-/*   Updated: 2024/12/13 10:18:58 by ltheveni         ###   ########.fr       */
+/*   Updated: 2024/12/13 23:17:18 by ltheveni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,7 +102,7 @@ void	exec_cmd(int i, char **argv, char **envp)
 	char	**cmd;
 	char	*cmd_path;
 
-	cmd = ft_split(argv[i + 2], ' ');
+	cmd = parse_cmd(argv[i + 2]);
 	if (!cmd | !cmd[0])
 	{
 		perror("Invalid Command");
