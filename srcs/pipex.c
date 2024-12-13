@@ -6,14 +6,11 @@
 /*   By: ltheveni <ltheveni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/10 18:11:14 by ltheveni          #+#    #+#             */
-/*   Updated: 2024/12/11 16:49:36 by ltheveni         ###   ########.fr       */
+/*   Updated: 2024/12/13 09:08:51 by ltheveni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/pipex.h"
-#include <cstdlib>
-#include <stdio.h>
-#include <stdlib.h>
 
 void	init_data(t_pipex *data, int argc, char **argv)
 {
@@ -29,7 +26,7 @@ void	init_data(t_pipex *data, int argc, char **argv)
 		perror("open infile");
 		exit(EXIT_FAILURE);
 	}
-	data->outfile = open(argv[argc - 1], O_WRONLY | O_CREAT | O_TRUNC, 0644);
+	data->outfile = open(argv[argc - 1], O_WRONLY | O_CREAT | O_TRUNC, 0777);
 	if (data->outfile < 0)
 	{
 		perror("open outfile");
@@ -53,24 +50,48 @@ void	create_pipes(t_pipex *data)
 	}
 }
 
+void	wait_for_children(int cmd_count)
+{
+	int	i;
+
+	i = 0;
+	while (i < cmd_count)
+	{
+		wait(NULL);
+		i++;
+	}
+}
+
 int	main(int argc, char **argv, char **envp)
 {
 	t_pipex	data;
 
-	if (argc > 4)
+	/* if (argc == 2) */
+	/* { */
+	/* 	exec_cmd(-1, argv, envp); */
+	/* 	return (0); */
+	/* } */
+	if (argc < 5)
 	{
-		data.cmd_count = argc - 3;
-		init_data(&data, argc, argv);
-		create_pipes(&data);
-		fork_processes(argv, envp, &data);
-		/* if (!ft_strncmp(argv[1], "here_doc", ft_strlen(argv[1]) - 1)) */
-		/* 	is_success = main_loop(argc, argv); */
-		/* is_success = main_loop(argc, argv); */
-		/* if (!is_success) */
-		/* 	return (1); */
-		close(data.infile);
-		close(data.outfile);
-		free(data.pipes);
+		perror("./pipex infile cmd cmd outfile");
+		exit(EXIT_FAILURE);
 	}
+	if (!ft_strncmp(argv[1], "here_doc", ft_strlen(argv[1]) - 1))
+	{
+		if (argc < 6)
+		{
+			perror("./pipex infile cmd cmd outfile");
+			exit(EXIT_FAILURE);
+		}
+	}
+	data.cmd_count = argc - 3;
+	init_data(&data, argc, argv);
+	create_pipes(&data);
+	fork_processes(argv, envp, &data);
+	close_pipes(&data);
+	wait_for_children(data.cmd_count);
+	close(data.infile);
+	close(data.outfile);
+	free(data.pipes);
 	return (0);
 }
