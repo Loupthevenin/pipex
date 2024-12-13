@@ -6,7 +6,7 @@
 /*   By: ltheveni <ltheveni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 11:12:45 by ltheveni          #+#    #+#             */
-/*   Updated: 2024/12/13 08:57:35 by ltheveni         ###   ########.fr       */
+/*   Updated: 2024/12/13 10:18:58 by ltheveni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,11 +33,6 @@ char	**get_path_dir(char **envp)
 	return (ft_split(path_value, ':'));
 }
 
-int	is_executable(const char *path)
-{
-	return (access(path, X_OK) == 0);
-}
-
 char	*join_path(const char *dir, const char *cmd)
 {
 	char	*full_path;
@@ -53,22 +48,11 @@ char	*join_path(const char *dir, const char *cmd)
 	return (full_path);
 }
 
-char	*get_cmd_path(const char *cmd, char **envp)
+char	*loop_dirs(char **dirs, const char *cmd)
 {
-	char	**dirs;
-	char	*full_path;
 	int		i;
+	char	*full_path;
 
-	if (ft_strchr(cmd, '/'))
-	{
-		if (is_executable(cmd))
-			return (ft_strdup(cmd));
-		else
-			return (NULL);
-	}
-	dirs = get_path_dir(envp);
-	if (!dirs)
-		return (NULL);
 	i = 0;
 	while (dirs[i])
 	{
@@ -86,8 +70,31 @@ char	*get_cmd_path(const char *cmd, char **envp)
 		free(full_path);
 		i++;
 	}
-	free_tab(dirs);
 	return (NULL);
+}
+
+char	*get_cmd_path(const char *cmd, char **envp)
+{
+	char	**dirs;
+	char	*result;
+
+	if (ft_strchr(cmd, '/'))
+	{
+		if (is_executable(cmd))
+			return (ft_strdup(cmd));
+		else
+			return (NULL);
+	}
+	dirs = get_path_dir(envp);
+	if (!dirs)
+		return (NULL);
+	result = loop_dirs(dirs, cmd);
+	if (!result)
+	{
+		free_tab(dirs);
+		return (NULL);
+	}
+	return (result);
 }
 
 void	exec_cmd(int i, char **argv, char **envp)
@@ -101,8 +108,6 @@ void	exec_cmd(int i, char **argv, char **envp)
 		perror("Invalid Command");
 		exit(EXIT_FAILURE);
 	}
-	/* ft_printf("%s\n", cmd[0]); */
-	/* ft_printf("%s\n", cmd[1]); */
 	cmd_path = get_cmd_path(cmd[0], envp);
 	if (!cmd_path)
 	{
