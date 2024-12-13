@@ -6,7 +6,7 @@
 /*   By: ltheveni <ltheveni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/10 18:11:14 by ltheveni          #+#    #+#             */
-/*   Updated: 2024/12/13 09:08:51 by ltheveni         ###   ########.fr       */
+/*   Updated: 2024/12/13 10:27:29 by ltheveni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 void	init_data(t_pipex *data, int argc, char **argv)
 {
-	data->pipes = malloc(sizeof(int[2]) * (data->cmd_count - 1));
+	data->pipes = malloc(sizeof(int [2]) * (data->cmd_count - 1));
 	if (!data->pipes)
 	{
 		perror("malloc");
@@ -66,11 +66,6 @@ int	main(int argc, char **argv, char **envp)
 {
 	t_pipex	data;
 
-	/* if (argc == 2) */
-	/* { */
-	/* 	exec_cmd(-1, argv, envp); */
-	/* 	return (0); */
-	/* } */
 	if (argc < 5)
 	{
 		perror("./pipex infile cmd cmd outfile");
