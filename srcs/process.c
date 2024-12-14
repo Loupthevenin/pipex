@@ -6,7 +6,7 @@
 /*   By: ltheveni <ltheveni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 16:32:44 by ltheveni          #+#    #+#             */
-/*   Updated: 2024/12/14 15:35:50 by ltheveni         ###   ########.fr       */
+/*   Updated: 2024/12/14 17:05:39 by ltheveni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,18 +16,24 @@ void	redirect(int i, t_pipex *data)
 {
 	if (i == 0)
 	{
-		dup2(data->infile, STDIN_FILENO);
-		dup2(data->pipes[i][1], STDOUT_FILENO);
+		if (dup2(data->infile, STDIN_FILENO) == -1)
+			perror_exit("dup2 infile");
+		if (dup2(data->pipes[i][1], STDOUT_FILENO) == -1)
+			perror_exit("dup2 pipe write end");
 	}
 	else if (i == data->cmd_count - 1)
 	{
-		dup2(data->pipes[i - 1][0], STDIN_FILENO);
-		dup2(data->outfile, STDOUT_FILENO);
+		if (dup2(data->pipes[i - 1][0], STDIN_FILENO) == -1)
+			perror_exit("dup2 pipe read end");
+		if (dup2(data->outfile, STDOUT_FILENO) == -1)
+			perror_exit("dup2 outfile");
 	}
 	else
 	{
-		dup2(data->pipes[i - 1][0], STDIN_FILENO);
-		dup2(data->pipes[i][1], STDOUT_FILENO);
+		if (dup2(data->pipes[i - 1][0], STDIN_FILENO) == -1)
+			perror_exit("dup2 pipe read end");
+		if (dup2(data->pipes[i][1], STDOUT_FILENO) == -1)
+			perror_exit("dup2 pipe wirte end");
 	}
 }
 

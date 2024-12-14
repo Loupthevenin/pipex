@@ -6,7 +6,7 @@
 /*   By: ltheveni <ltheveni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 11:12:45 by ltheveni          #+#    #+#             */
-/*   Updated: 2024/12/14 15:34:35 by ltheveni         ###   ########.fr       */
+/*   Updated: 2024/12/14 18:11:36 by ltheveni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ char	*loop_dirs(char **dirs, const char *cmd)
 			perror("malloc");
 			break ;
 		}
-		if (is_executable(full_path))
+		if (access(full_path, X_OK) == 0)
 		{
 			free_tab(dirs);
 			return (full_path);
@@ -80,7 +80,7 @@ char	*get_cmd_path(const char *cmd, char **envp)
 
 	if (ft_strchr(cmd, '/'))
 	{
-		if (is_executable(cmd))
+		if (access(cmd, X_OK) == 0)
 			return (ft_strdup(cmd));
 		else
 			return (NULL);

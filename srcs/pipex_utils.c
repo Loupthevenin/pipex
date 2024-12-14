@@ -6,7 +6,7 @@
 /*   By: ltheveni <ltheveni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 14:27:00 by ltheveni          #+#    #+#             */
-/*   Updated: 2024/12/14 15:28:18 by ltheveni         ###   ########.fr       */
+/*   Updated: 2024/12/14 18:10:18 by ltheveni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,9 +25,11 @@ void	free_tab(char **tabs)
 	free(tabs);
 }
 
-int	is_executable(const char *path)
+void	handle_file_error(int *file, int flags)
 {
-	return (access(path, X_OK) == 0);
+	*file = open("/dev/null", flags);
+	if (*file < 0)
+		perror_exit("open /dev/null");
 }
 
 int	is_quote(const char *cmd)

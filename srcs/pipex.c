@@ -6,7 +6,7 @@
 /*   By: ltheveni <ltheveni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/10 18:11:14 by ltheveni          #+#    #+#             */
-/*   Updated: 2024/12/14 15:32:51 by ltheveni         ###   ########.fr       */
+/*   Updated: 2024/12/14 18:10:30 by ltheveni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,15 +21,15 @@ void	init_data(t_pipex *data, int argc, char **argv)
 	{
 		data->infile = open(argv[1], O_RDONLY);
 		if (data->infile < 0)
-			perror_exit("open infile");
+			handle_file_error(&data->infile, O_RDONLY);
 		data->outfile = open(argv[argc - 1], O_WRONLY | O_CREAT | O_TRUNC,
-				0777);
+				0644);
 	}
 	else
 		data->outfile = open(argv[argc - 1], O_WRONLY | O_CREAT | O_APPEND,
-				0777);
+				0644);
 	if (data->outfile < 0)
-		perror_exit("open outfile");
+		handle_file_error(&data->outfile, O_WRONLY);
 }
 
 void	create_pipes(t_pipex *data)
@@ -58,7 +58,7 @@ void	handle_here_doc(t_pipex *data, char *delimiter)
 	char	*line;
 	int		fd;
 
-	fd = open(".here_doc_tmp", O_WRONLY | O_CREAT | O_TRUNC, 0777);
+	fd = open(".here_doc_tmp", O_WRONLY | O_CREAT | O_TRUNC, 0600);
 	if (fd < 0)
 		perror_exit("open temp file");
 	while (1)
