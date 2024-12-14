@@ -6,7 +6,7 @@
 /*   By: ltheveni <ltheveni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/10 18:15:40 by ltheveni          #+#    #+#             */
-/*   Updated: 2024/12/14 15:27:23 by ltheveni         ###   ########.fr       */
+/*   Updated: 2024/12/14 18:10:54 by ltheveni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ typedef struct s_pipex
 	int	is_here_doc;
 }		t_pipex;
 
-int		is_executable(const char *path);
+void	handle_file_error(int *file, int flags);
 int		is_quote(const char *cmd);
 void	wait_for_children(int cmd_count);
 void	perror_exit(const char *msg);
