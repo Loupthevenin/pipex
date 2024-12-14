@@ -6,7 +6,7 @@
 /*   By: ltheveni <ltheveni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 14:27:00 by ltheveni          #+#    #+#             */
-/*   Updated: 2024/12/13 23:37:46 by ltheveni         ###   ########.fr       */
+/*   Updated: 2024/12/14 15:28:18 by ltheveni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,4 +42,22 @@ int	is_quote(const char *cmd)
 		i++;
 	}
 	return (0);
+}
+
+void	wait_for_children(int cmd_count)
+{
+	int	i;
+
+	i = 0;
+	while (i < cmd_count)
+	{
+		wait(NULL);
+		i++;
+	}
+}
+
+void	perror_exit(const char *msg)
+{
+	perror(msg);
+	exit(EXIT_FAILURE);
 }

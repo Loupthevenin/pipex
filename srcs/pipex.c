@@ -6,7 +6,7 @@
 /*   By: ltheveni <ltheveni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/10 18:11:14 by ltheveni          #+#    #+#             */
-/*   Updated: 2024/12/13 23:38:49 by ltheveni         ###   ########.fr       */
+/*   Updated: 2024/12/14 15:32:51 by ltheveni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,22 +16,20 @@ void	init_data(t_pipex *data, int argc, char **argv)
 {
 	data->pipes = malloc(sizeof(int [2]) * (data->cmd_count - 1));
 	if (!data->pipes)
+		perror_exit("malloc");
+	if (!data->is_here_doc)
 	{
-		perror("malloc");
-		exit(EXIT_FAILURE);
+		data->infile = open(argv[1], O_RDONLY);
+		if (data->infile < 0)
+			perror_exit("open infile");
+		data->outfile = open(argv[argc - 1], O_WRONLY | O_CREAT | O_TRUNC,
+				0777);
 	}
-	data->infile = open(argv[1], O_RDONLY);
-	if (data->infile < 0)
-	{
-		perror("open infile");
-		exit(EXIT_FAILURE);
-	}
-	data->outfile = open(argv[argc - 1], O_WRONLY | O_CREAT | O_TRUNC, 0777);
+	else
+		data->outfile = open(argv[argc - 1], O_WRONLY | O_CREAT | O_APPEND,
+				0777);
 	if (data->outfile < 0)
-	{
-		perror("open outfile");
-		exit(EXIT_FAILURE);
-	}
+		perror_exit("open outfile");
 }
 
 void	create_pipes(t_pipex *data)
@@ -42,24 +40,43 @@ void	create_pipes(t_pipex *data)
 	while (i < data->cmd_count - 1)
 	{
 		if (pipe(data->pipes[i]) == -1)
-		{
-			perror("pipe");
-			exit(EXIT_FAILURE);
-		}
+			perror_exit("pipe");
 		i++;
 	}
 }
 
-void	wait_for_children(int cmd_count)
+int	is_here_doc(char *str)
 {
-	int	i;
+	if (!ft_strncmp(str, "here_doc", ft_strlen(str)))
+		return (1);
+	else
+		return (0);
+}
 
-	i = 0;
-	while (i < cmd_count)
+void	handle_here_doc(t_pipex *data, char *delimiter)
+{
+	char	*line;
+	int		fd;
+
+	fd = open(".here_doc_tmp", O_WRONLY | O_CREAT | O_TRUNC, 0777);
+	if (fd < 0)
+		perror_exit("open temp file");
+	while (1)
 	{
-		wait(NULL);
-		i++;
+		ft_putstr_fd("here_doc> ", 1);
+		line = get_next_line(0);
+		if (!line || !ft_strncmp(line, delimiter, ft_strlen(delimiter)))
+		{
+			free(line);
+			break ;
+		}
+		ft_putstr_fd(line, fd);
+		free(line);
 	}
+	close(fd);
+	data->infile = open(".here_doc_tmp", O_RDONLY);
+	if (data->infile < 0)
+		perror_exit("open temp file");
 }
 
 int	main(int argc, char **argv, char **envp)
@@ -67,20 +84,14 @@ int	main(int argc, char **argv, char **envp)
 	t_pipex	data;
 
 	if (argc < 5)
-	{
-		perror("./pipex infile cmd cmd outfile");
-		exit(EXIT_FAILURE);
-	}
-	if (!ft_strncmp(argv[1], "here_doc", ft_strlen(argv[1]) - 1))
-	{
-		if (argc < 6)
-		{
-			perror("./pipex infile cmd cmd outfile");
-			exit(EXIT_FAILURE);
-		}
-	}
-	data.cmd_count = argc - 3;
+		perror_exit("./pipex infile cmd cmd outfile");
+	data.is_here_doc = is_here_doc(argv[1]);
+	if (data.is_here_doc && argc < 6)
+		perror_exit("./pipex here_doc LIMITER cmd cmd outfile");
+	data.cmd_count = argc - 3 - data.is_here_doc;
 	init_data(&data, argc, argv);
+	if (data.is_here_doc)
+		handle_here_doc(&data, argv[2]);
 	create_pipes(&data);
 	fork_processes(argv, envp, &data);
 	close_pipes(&data);

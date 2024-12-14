@@ -6,7 +6,7 @@
 #    By: ltheveni <ltheveni@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/12/10 18:18:13 by ltheveni          #+#    #+#              #
-#    Updated: 2024/12/10 18:30:46 by ltheveni         ###   ########.fr        #
+#    Updated: 2024/12/14 15:19:03 by ltheveni         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -44,6 +44,8 @@ OBJS = $(patsubst $(SRC_DIR)%.c, $(OBJ_DIR)%.o, $(SRCS))
 # Recipe
 all: $(LIBFT) $(NAME)
 
+bonus: $(LIBFT) $(NAME)
+
 $(NAME): $(LIB_DIR)$(LIBFT).a $(OBJS)
 	@printf "$(_END)\nCompiled source files\n"
 	@$(CC) $(CFLAGS) $(INCLUDE) $(OBJS) $(LIBFLAGS) -o $@
@@ -78,4 +80,4 @@ leak: CFLAGS += $(DEBUG_FLAGS)
 leak: re
 	@printf "$(_BLUE)Leak check build done$(_END)\n"
 
-.PHONY: all clean fclean re libft debug leak
+.PHONY: all clean fclean re libft debug leak bonus
