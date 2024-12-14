@@ -6,7 +6,7 @@
 /*   By: ltheveni <ltheveni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 16:32:44 by ltheveni          #+#    #+#             */
-/*   Updated: 2024/12/13 09:07:19 by ltheveni         ###   ########.fr       */
+/*   Updated: 2024/12/14 15:35:50 by ltheveni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ void	process(int i, char **argv, char **envp, t_pipex *data)
 {
 	redirect(i, data);
 	close_pipes(data);
-	exec_cmd(i, argv, envp);
+	exec_cmd(i, argv, envp, data);
 }
 
 void	fork_processes(char **argv, char **envp, t_pipex *data)
@@ -61,12 +61,12 @@ void	fork_processes(char **argv, char **envp, t_pipex *data)
 	{
 		pid = fork();
 		if (pid == -1)
+			perror_exit("fork");
+		if (pid == 0)
 		{
-			perror("fork");
+			process(i, argv, envp, data);
 			exit(EXIT_FAILURE);
 		}
-		if (pid == 0)
-			process(i, argv, envp, data);
 		i++;
 	}
 }

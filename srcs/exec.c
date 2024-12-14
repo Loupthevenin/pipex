@@ -6,7 +6,7 @@
 /*   By: ltheveni <ltheveni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 11:12:45 by ltheveni          #+#    #+#             */
-/*   Updated: 2024/12/13 23:17:18 by ltheveni         ###   ########.fr       */
+/*   Updated: 2024/12/14 15:34:35 by ltheveni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,27 +97,22 @@ char	*get_cmd_path(const char *cmd, char **envp)
 	return (result);
 }
 
-void	exec_cmd(int i, char **argv, char **envp)
+void	exec_cmd(int i, char **argv, char **envp, t_pipex *data)
 {
 	char	**cmd;
 	char	*cmd_path;
 
-	cmd = parse_cmd(argv[i + 2]);
+	cmd = parse_cmd(argv[i + 2 + data->is_here_doc]);
 	if (!cmd | !cmd[0])
-	{
-		perror("Invalid Command");
-		exit(EXIT_FAILURE);
-	}
+		perror_exit("Invalid Command");
 	cmd_path = get_cmd_path(cmd[0], envp);
 	if (!cmd_path)
 	{
 		free_tab(cmd);
-		perror("Command not found");
-		exit(EXIT_FAILURE);
+		perror_exit("Command not found");
 	}
 	execve(cmd_path, cmd, envp);
 	free(cmd_path);
 	free_tab(cmd);
-	perror("execve");
-	exit(EXIT_FAILURE);
+	perror_exit("execve");
 }
