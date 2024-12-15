@@ -6,31 +6,11 @@
 /*   By: ltheveni <ltheveni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/10 18:11:14 by ltheveni          #+#    #+#             */
-/*   Updated: 2024/12/15 09:41:15 by ltheveni         ###   ########.fr       */
+/*   Updated: 2024/12/15 20:08:01 by ltheveni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/pipex.h"
-
-void	init_data(t_pipex *data, int argc, char **argv)
-{
-	data->pipes = malloc(sizeof(int [2]) * (data->cmd_count - 1));
-	if (!data->pipes)
-		perror_exit("malloc");
-	if (!data->is_here_doc)
-	{
-		data->infile = open(argv[1], O_RDONLY);
-		if (data->infile < 0)
-			handle_file_error(&data->infile, O_RDONLY);
-		data->outfile = open(argv[argc - 1], O_WRONLY | O_CREAT | O_TRUNC,
-				0644);
-	}
-	else
-		data->outfile = open(argv[argc - 1], O_WRONLY | O_CREAT | O_APPEND,
-				0644);
-	if (data->outfile < 0)
-		handle_file_error(&data->outfile, O_WRONLY);
-}
 
 void	create_pipes(t_pipex *data)
 {
