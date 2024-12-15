@@ -6,7 +6,7 @@
 /*   By: ltheveni <ltheveni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 14:27:00 by ltheveni          #+#    #+#             */
-/*   Updated: 2024/12/14 18:10:18 by ltheveni         ###   ########.fr       */
+/*   Updated: 2024/12/15 08:58:42 by ltheveni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@ void	free_tab(char **tabs)
 {
 	int	i;
 
+	if (!tabs)
+		return ;
 	i = 0;
 	while (tabs[i])
 	{

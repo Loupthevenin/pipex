@@ -6,7 +6,7 @@
 /*   By: ltheveni <ltheveni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/10 18:11:14 by ltheveni          #+#    #+#             */
-/*   Updated: 2024/12/14 18:10:30 by ltheveni         ###   ########.fr       */
+/*   Updated: 2024/12/15 09:41:15 by ltheveni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,6 +77,7 @@ void	handle_here_doc(t_pipex *data, char *delimiter)
 	data->infile = open(".here_doc_tmp", O_RDONLY);
 	if (data->infile < 0)
 		perror_exit("open temp file");
+	unlink(".here_doc_tmp");
 }
 
 int	main(int argc, char **argv, char **envp)
