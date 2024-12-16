@@ -68,7 +68,7 @@ int	setup_outfile(const char *outfile, int is_here_doc)
 
 void	init_data(t_pipex *data, int argc, char **argv)
 {
-	data->pipes = malloc(sizeof(int[2]) * (data->cmd_count - 1));
+	data->pipes = malloc(sizeof(int [2]) * (data->cmd_count - 1));
 	if (!data->pipes)
 		perror_exit("malloc");
 	data->infile = setup_infile(argv[1], data->is_here_doc);
