@@ -6,7 +6,7 @@
 /*   By: ltheveni <ltheveni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/11 16:32:44 by ltheveni          #+#    #+#             */
-/*   Updated: 2024/12/16 11:12:57 by ltheveni         ###   ########.fr       */
+/*   Updated: 2024/12/16 21:13:11 by ltheveni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,14 +33,17 @@ void	process(int i, char **argv, char **envp, t_pipex *data)
 	{
 		if (data->infile == -1)
 			perror("Permission denied (infile read)");
+		free(data->pipes);
 		exit(EXIT_FAILURE);
 	}
 	else if (i == data->cmd_count - 1 && data->outfile == -1)
 	{
 		perror("Permission denied (outfile write)");
+		free(data->pipes);
 		exit(EXIT_FAILURE);
 	}
 	exec_cmd(i, argv, envp, data);
+	free(data->pipes);
 	exit(EXIT_FAILURE);
 }
 
