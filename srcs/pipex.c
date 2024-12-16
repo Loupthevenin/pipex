@@ -6,7 +6,7 @@
 /*   By: ltheveni <ltheveni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/10 18:11:14 by ltheveni          #+#    #+#             */
-/*   Updated: 2024/12/15 20:08:01 by ltheveni         ###   ########.fr       */
+/*   Updated: 2024/12/16 10:20:52 by ltheveni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,20 @@ int	is_here_doc(char *str)
 		return (0);
 }
 
+int	break_here_doc(char *delimiter, char *line)
+{
+	if (!line)
+		return (1);
+	if ((ft_strlen(delimiter) == 0 && line[0] == '\n')
+		|| (ft_strlen(delimiter) > 0 && !ft_strncmp(line, delimiter,
+				ft_strlen(delimiter))))
+	{
+		free(line);
+		return (1);
+	}
+	return (0);
+}
+
 void	handle_here_doc(t_pipex *data, char *delimiter)
 {
 	char	*line;
@@ -45,11 +59,8 @@ void	handle_here_doc(t_pipex *data, char *delimiter)
 	{
 		ft_putstr_fd("here_doc> ", 1);
 		line = get_next_line(0);
-		if (!line || !ft_strncmp(line, delimiter, ft_strlen(delimiter)))
-		{
-			free(line);
+		if (break_here_doc(delimiter, line))
 			break ;
-		}
 		ft_putstr_fd(line, fd);
 		free(line);
 	}
