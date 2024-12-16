@@ -6,7 +6,7 @@
 /*   By: ltheveni <ltheveni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/10 18:11:14 by ltheveni          #+#    #+#             */
-/*   Updated: 2024/12/16 10:20:52 by ltheveni         ###   ########.fr       */
+/*   Updated: 2024/12/16 11:13:59 by ltheveni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,8 +88,10 @@ int	main(int argc, char **argv, char **envp)
 	fork_processes(argv, envp, &data);
 	close_pipes(&data);
 	wait_for_children(data.cmd_count);
-	close(data.infile);
-	close(data.outfile);
+	if (data.infile > 0)
+		close(data.infile);
+	if (data.outfile > 0)
+		close(data.outfile);
 	free(data.pipes);
 	return (0);
 }

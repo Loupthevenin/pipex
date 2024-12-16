@@ -6,7 +6,7 @@
 /*   By: ltheveni <ltheveni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 11:12:45 by ltheveni          #+#    #+#             */
-/*   Updated: 2024/12/15 09:25:37 by ltheveni         ###   ########.fr       */
+/*   Updated: 2024/12/16 11:08:28 by ltheveni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,5 +117,6 @@ void	exec_cmd(int i, char **argv, char **envp, t_pipex *data)
 	execve(cmd_path, cmd, envp);
 	free(cmd_path);
 	free_tab(cmd);
+	close_pipes(data);
 	perror_exit("execve");
 }
