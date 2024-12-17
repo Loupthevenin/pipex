@@ -6,7 +6,7 @@
 /*   By: ltheveni <ltheveni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/12 14:27:00 by ltheveni          #+#    #+#             */
-/*   Updated: 2024/12/15 14:51:33 by ltheveni         ###   ########.fr       */
+/*   Updated: 2024/12/17 13:43:03 by ltheveni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,16 @@ void	free_tab(char **tabs)
 		i++;
 	}
 	free(tabs);
+}
+
+void	cleanup_exec_cmd(t_pipex *data, char **cmd)
+{
+	free_tab(cmd);
+	free(data->pipes);
+	if (data->infile >= 0)
+		close(data->infile);
+	if (data->outfile >= 0)
+		close(data->outfile);
 }
 
 int	is_quote(const char *cmd)
