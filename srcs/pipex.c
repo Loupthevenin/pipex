@@ -6,7 +6,7 @@
 /*   By: ltheveni <ltheveni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/10 18:11:14 by ltheveni          #+#    #+#             */
-/*   Updated: 2024/12/17 08:23:39 by ltheveni         ###   ########.fr       */
+/*   Updated: 2024/12/18 10:06:20 by ltheveni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,9 +37,13 @@ int	break_here_doc(char *delimiter, char *line)
 {
 	if (!line)
 		return (1);
-	if ((ft_strlen(delimiter) == 0 && line[0] == '\n')
-		|| (ft_strlen(delimiter) > 0 && !ft_strncmp(line, delimiter,
-				ft_strlen(delimiter))))
+	if ((ft_strlen(delimiter) == 0 && ft_strlen(line) == 1 && line[0] == '\n'))
+	{
+		free(line);
+		return (1);
+	}
+	if (ft_strlen(delimiter) > 0 && !ft_strncmp(line, delimiter,
+			ft_strlen(delimiter)) && line[ft_strlen(delimiter)] == '\n')
 	{
 		free(line);
 		return (1);
